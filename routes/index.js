@@ -5,14 +5,14 @@ const express = require('express')
 const config = require('../db.js');
 const connection = config.connection;
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
 app.use(express.json());
 
 app.listen(
     PORT,
     () =>
-    console.log(`its alive on http://localhost:${PORT}`)
+    console.log(`its alive on`)
 
 )
 
