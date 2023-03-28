@@ -23,8 +23,7 @@ app.get('/product', (req, res) => {
         if (error) {
             res.status(500).json({ message: 'Error retrieving products from database' });
         } else {
-            //res.status(200).send(results);
-            res.status(200).send({message: 'Success', results: results});
+            res.status(200).send(results);
             console.log("Succes")
         }
     });
