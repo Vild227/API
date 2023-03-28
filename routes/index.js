@@ -5,14 +5,16 @@ const express = require('express')
 const config = require('../db.js');
 const connection = config.connection;
 const app = express();
+const cors = require('cors');
 const PORT = 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.listen(
     PORT,
     () =>
-    console.log(`its alive on`)
+    console.log(`its alive`)
 
 )
 
@@ -27,12 +29,13 @@ app.get('/product', (req, res) => {
 });
 
 app.post('/order', (req, res) => {
-    const { customer_name, customer_email, items } = req.body;
+    const { firstName, lastName, Address, Address2, postNumber, City, Country, email, phone, Company, VAT, Comment, Subscribe, Conditions, Sum, items } = req.body;
 
+    const parsedItems = JSON.parse(items);
     // First, insert the order into the orders table
     connection.query(
-        'INSERT INTO orders (customer_name, customer_email) VALUES (?, ?)',
-        [customer_name, customer_email],
+        'INSERT INTO orders (firstName, lastName, Address, Address2, postNumber, City, Country, email, phone, Company, VAT, Comment, Subscribe, Conditions, Sum) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [firstName, lastName, Address, Address2, postNumber, City, Country, email, phone, Company, VAT, Comment, Subscribe, Conditions, Sum],
         (error, result) => {
             if (error) {
                 res.status(500).send('Error inserting order into database');
@@ -40,7 +43,7 @@ app.post('/order', (req, res) => {
                 const orderId = result.insertId;
 
                 // Then, insert each item in the order into the order_items table
-                const itemValues = items.map((item) => [
+                const itemValues = parsedItems.map((item) => [
                     orderId,
                     item.product_id,
                     item.quantity
@@ -50,9 +53,9 @@ app.post('/order', (req, res) => {
                     [itemValues],
                     (error, result) => {
                         if (error) {
-                            res.status(500).send('Error inserting items into order');
+                            res.status(500).json({ message: 'Error inserting items into order' });
                         } else {
-                            res.status(201).send(`Created order with ID: ${orderId}`);
+                            res.status(201).json({ message: `Created order with ID: ${orderId}` });
                         }
                     }
                 );
