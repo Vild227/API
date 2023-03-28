@@ -21,9 +21,9 @@ app.listen(
 app.get('/product', (req, res) => {
     connection.query('SELECT * FROM Product', (error, results, fields) => {
         if (error) {
-            res.status(500).send('Error retrieving products from database');
+            res.status(500).json({ message: 'Error retrieving products from database' });
         } else {
-            res.status(200).send(results);
+            res.status(201).json({ message: `products received: ${results}` });
         }
     });
 });
