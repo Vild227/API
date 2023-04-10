@@ -1,0 +1,10 @@
+version: "3"
+services:
+  api:
+    image: node:current-alpine
+    volumes:
+      - ./API:/app
+    working_dir: /app/routes
+    command: ["node", "index.js"]
+    ports:
+      - "3000:3000"
