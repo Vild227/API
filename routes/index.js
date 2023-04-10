@@ -29,6 +29,17 @@ app.get('/product', (req, res) => {
     });
 });
 
+app.get('/order', (req, res) => {
+    connection.query('SELECT * FROM orders', (error, results, fields) => {
+        if (error) {
+            res.status(500).json({ message: 'Error retrieving orders from database' });
+        } else {
+            res.status(200).send(results);
+            console.log("Succes")
+        }
+    });
+});
+
 app.post('/order', (req, res) => {
     const { firstName, lastName, Address, Address2, postNumber, City, Country, email, phone, Company, VAT, Comment, Subscribe, Conditions, Sum, items } = req.body;
 
@@ -64,6 +75,9 @@ app.post('/order', (req, res) => {
         }
     );
 });
+
+
+
 
 app.use((req, res, next) => {
     res.status(404).send('Sorry, we could not find that!');
