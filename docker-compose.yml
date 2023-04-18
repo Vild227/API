@@ -22,6 +22,8 @@ services:
     image: mysql:8.0
     container_name: my-mysql
     restart: always
+    env_file:
+      - secrets.env
     environment:
       MYSQL_DATABASE: mydatabase
       MYSQL_USER: root
