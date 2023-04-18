@@ -4,6 +4,8 @@ services:
   node-app:
     image: node:14
     container_name: my-node-app
+    env_file:
+      - secrets.env
     environment:
       MYSQL_HOST: db
       MYSQL_USER: ${MYSQL_USER}
