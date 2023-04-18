@@ -1,10 +1,34 @@
 version: "3"
+
 services:
-  api:
-    image: node:current-alpine
+  node-app:
+    image: node:14
+    container_name: my-node-app
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysecretpassword
+      MYSQL_DB: mydatabase
     volumes:
-      - ./API:/app
-    working_dir: /app/routes
-    command: ["node", "index.js"]
+      - .:/app
+    working_dir: /app
+    command: npm start
     ports:
       - "3000:3000"
+
+  db:
+    image: mysql:8.0
+    container_name: my-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mysecretpassword
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  db-data:
