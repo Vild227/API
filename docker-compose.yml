@@ -26,8 +26,6 @@ services:
       - secrets.env
     environment:
       MYSQL_DATABASE: mydatabase
-      MYSQL_USER: root
-      MYSQL_PASSWORD: mysecretpassword
       MYSQL_ROOT_PASSWORD: mysecretpassword
     volumes:
       - db-data:/var/lib/mysql
