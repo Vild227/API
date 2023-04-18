@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: npm start
+    command: node routes/index.js
     ports:
       - "3000:3000"
 
