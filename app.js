@@ -1,7 +1,7 @@
 const express = require('express');
 const productRouter = require('./routes/product');
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 
 app.listen(
