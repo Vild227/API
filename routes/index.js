@@ -40,6 +40,19 @@ app.get('/order', (req, res) => {
     });
 });
 
+app.get('/checkUsername/:username', (req, res) => {
+    const username = req.params.username;
+    connection.query('SELECT * FROM users WHERE username = ?', [username], (error, results, fields) => {
+        if (error) {
+            res.status(500).json({ message: 'Error checking username in database' });
+        } else if (results.length === 0) {
+            res.status(200).json({ exists: false });
+        } else {
+            res.status(200).json({ exists: true });
+        }
+    });
+});
+
 app.post('/order', (req, res) => {
     const { firstName, lastName, Address, Address2, postNumber, City, Country, email, phone, Company, VAT, Comment, Subscribe, Conditions, Sum, items } = req.body;
 
