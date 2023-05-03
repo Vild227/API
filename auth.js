@@ -17,53 +17,26 @@ const config = {
 
 const sequelize = new Sequelize(config);
 
+// Create a session store using your Sequelize instance
 const sessionStore = new SequelizeStore({
     db: sequelize,
 });
 
+// Define your User model
 const User = sequelize.define('User', {
     username: Sequelize.STRING,
     password: Sequelize.STRING,
 });
 
+// Sync your models to the database
 sequelize.sync();
 
+// Initialize Express app
 const app = express();
 
+// Set up middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.post('/register', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-
-        if (!username || !password) {
-            return res.status(400).send('Username and password are required');
-        }
-
-        const existingUser = await User.findOne({ where: { username } });
-        if (existingUser) {
-            return res.status(400).send('Username already exists');
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ username, password: hashedPassword });
-
-        req.login(newUser, err => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Error during login after registration');
-            }
-            return res.status(201).send('User registered and logged in');
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error during registration');
-    }
-});
-
-
-
+app.use(express.urlencoded({ extended: false }));
 app.use(session({
     secret: 'your_session_secret',
     resave: false,
@@ -72,8 +45,8 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(passport.authenticate('local'));
 
+// Configure Passport
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
         const user = await User.findOne({ where: { username } });
@@ -102,11 +75,14 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+// Your routes and API endpoints go here
 module.exports = {
     passport: passport,
     User: User,
 };
 
+
+// Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
