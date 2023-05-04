@@ -6,20 +6,24 @@ router.get('/login', (req, res) => {
     res.send('Welcome to login!');
 });
 
-router.post('/', passport.authenticate('local', {
-    successRedirect: '/success',
-    failureRedirect: '/failure'
-}));
-
-// Add success and failure routes
-router.get('/success', (req, res) => {
-    res.send('Login successful');
-});
-
-router.get('/failure', (req, res) => {
-    res.status(401).send('Login failed');
+router.post('/', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.status(401).json({ message: info.message || 'Login failed' });
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.json({ message: 'Login successful' });
+        });
+    })(req, res, next);
 });
 
 module.exports = router;
+
 
 
