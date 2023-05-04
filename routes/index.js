@@ -7,6 +7,21 @@ const session = require('express-session');
 const Sequelize = require('sequelize');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
+//frontend routing
+const homeRoute = require('./routing/home');
+const loginRoute = require('./routing/login');
+const checkoutFormRoute = require('./routing/checkoutForm');
+const paymentRoute = require('./routing/payment');
+const registrationRoute = require('./routing/registration');
+//
+
+const checkUsernameRoute = require('./routing/checkUsername');
+
+//...
+
+
+
+
 const config = {
     dialect: 'mysql',
     host: '130.225.170.71',
@@ -49,6 +64,13 @@ app.use(session({
 // Initialize the authencation library
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/', homeRoute);
+app.use('/login', loginRoute);
+app.use('/checkoutform', checkoutFormRoute);
+app.use('/payment', paymentRoute);
+app.use('/registration', registrationRoute);
+app.use('/checkUsername', checkUsernameRoute);
 
 // Registration route
 app.post('/register', async (req, res) => {
