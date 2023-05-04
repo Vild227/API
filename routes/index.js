@@ -28,7 +28,10 @@ sequelize.sync();
 const app = express();
 
 //Allows API to accept requests from different origins (domains) our backend is hosted on different ports
-app.use(cors());
+app.use(cors({
+    origin: 'http://130.225.170.71:8080',
+    credentials: true,
+}));
 //Parses JSON data
 app.use(express.json());
 //parcing URL (through forms)
