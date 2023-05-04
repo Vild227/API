@@ -31,10 +31,26 @@ sequelize.sync();
 
 const app = express();
 
+//Allows API to accept requests from different origins (domains) our backend is hosted on different ports
 app.use(cors());
+//Parses JSON data
 app.use(express.json());
+//parcing URL (through forms)
 app.use(express.urlencoded({ extended: true }));
 
+// Initialize session middleware
+app.use(session({
+    secret: 'your_session_secret',
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+}));
+
+// Initialize the authencation library
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Registration route
 app.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -64,17 +80,10 @@ app.post('/register', async (req, res) => {
     }
 });
 
-
-
-app.use(session({
-    secret: 'your_session_secret',
-    resave: false,
-    saveUninitialized: false,
-    store: sessionStore,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate('local'));
+// Example of a protected route
+app.get('/protected', passport.authenticate('local'), (req, res) => {
+    res.send('This is a protected route');
+});
 
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
@@ -103,11 +112,6 @@ passport.deserializeUser(async (id, done) => {
         done(err);
     }
 });
-
-module.exports = {
-    passport: passport,
-    User: User,
-};
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
