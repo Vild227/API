@@ -4,7 +4,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
-const Sequelize = require('sequelize');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 //frontend routing
@@ -17,29 +16,11 @@ const registrationRoute = require('./routing/registration');
 
 const checkUsernameRoute = require('./routing/checkUsername');
 
-//...
-
-
-
-
-const config = {
-    dialect: 'mysql',
-    host: '130.225.170.71',
-    username: 'root1',
-    password: 'root1Root1&',
-    database: 'WebPage',
-    port: 3306,
-};
-
-const sequelize = new Sequelize(config);
+// Import sequelize and User from models.js
+const { sequelize, User } = require('./routing/models');
 
 const sessionStore = new SequelizeStore({
     db: sequelize,
-});
-
-const User = sequelize.define('User', {
-    username: Sequelize.STRING,
-    password: Sequelize.STRING,
 });
 
 sequelize.sync();

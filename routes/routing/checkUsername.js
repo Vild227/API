@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../index'); // Import the User model from your index.js file
+const { User } = require('./models'); // Import the User model from your index.js file
 
 router.get('/:username', async (req, res) => {
     try {
