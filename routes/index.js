@@ -60,7 +60,7 @@ app.use('/registration', registrationRoute);
 app.use('/checkUsername', checkUsernameRoute);
 
 // Registration route
-app.post('/register', async (req, res) => {
+app.post('/registration', async (req, res) => {
     try {
         const { username, password, email } = req.body; // Add email to the destructuring
 
