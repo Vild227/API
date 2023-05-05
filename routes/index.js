@@ -8,6 +8,7 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const crypto = require('crypto');
 
+
 //frontend routing
 const homeRoute = require('./routing/home');
 const loginRoute = require('./routing/login');
@@ -19,7 +20,7 @@ const registrationRoute = require('./routing/registration');
 const checkUsernameRoute = require('./routing/checkUsername');
 
 // Import sequelize and User from models.js
-const { sequelize, User } = require('./routing/models');
+const { sequelize, User, PasswordResetToken } = require('./routing/models');
 const {sendPasswordResetEmail} = require("../mailer");
 
 const sessionStore = new SequelizeStore({

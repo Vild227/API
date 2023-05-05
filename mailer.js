@@ -11,8 +11,6 @@ const transport = nodemailer.createTransport({
     },
 });
 
-module.exports = transport;
-
 const sendPasswordResetEmail = async (to, token) => {
     const resetUrl = `http://130.225.170.71/reset-password/${token}`;
 
@@ -40,6 +38,7 @@ const sendFeatureUpdateEmail = async (users, featureTitle, featureDescription) =
 };
 
 module.exports = {
+    transport,
     sendPasswordResetEmail,
     sendFeatureUpdateEmail,
 };
