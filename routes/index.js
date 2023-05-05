@@ -62,10 +62,16 @@ app.use('/checkUsername', checkUsernameRoute);
 // Registration route
 app.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, email } = req.body; // Add email to the destructuring
 
-        if (!username || !password) {
-            return res.status(400).send('Username and password are required');
+        if (!username || !password || !email) { // Check for the email as well
+            return res.status(400).send('Username, email, and password are required');
+        }
+
+        // Check if the email is already taken
+        const emailExists = await User.findOne({ where: { email } });
+        if (emailExists) {
+            return res.status(409).send('Email is already in use');
         }
 
         const existingUser = await User.findOne({ where: { username } });
@@ -74,7 +80,7 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ username, password: hashedPassword });
+        const newUser = await User.create({ username, password: hashedPassword, email }); // Add email to the user creation process
 
         req.login(newUser, err => {
             if (err) {
@@ -88,6 +94,7 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Error during registration');
     }
 });
+
 
 app.post('/password-reset', async (req, res) => {
     try {
