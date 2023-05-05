@@ -17,6 +17,9 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
     },
+    email: {
+        type: DataTypes.STRING,
+    },
 });
 
 const PasswordResetToken = sequelize.define('password_reset_token', {

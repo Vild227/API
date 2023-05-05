@@ -80,8 +80,11 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ username, password: hashedPassword, email }); // Add email to the user creation process
-
+        const newUser = await User.create({
+            username: username,
+            password: hashedPassword,
+            email: email
+        }, { fields: ['username', 'password', 'email'] });
         req.login(newUser, err => {
             if (err) {
                 console.error(err);
