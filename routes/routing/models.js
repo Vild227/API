@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const config = {
     dialect: 'mysql',
     host: '130.225.170.71',
@@ -8,24 +8,28 @@ const config = {
     port: 3306,
 };
 
-const sequelize = new Sequelize(config);
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 const User = sequelize.define('User', {
-    username: Sequelize.STRING,
-    password: Sequelize.STRING,
+    username: {
+        type: DataTypes.STRING,
+    },
+    password: {
+        type: DataTypes.STRING,
+    },
 });
 
 const PasswordResetToken = sequelize.define('password_reset_token', {
     token: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     expirationDate: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: false,
     },
 });
