@@ -1,5 +1,5 @@
 const express = require('express');
-const productRouter = require('./routes/product');
+const productRouter = require('./routes/routing/product');
 const app = express();
 const PORT = process.env.PORT || 8080;
 const auth = require('./auth');

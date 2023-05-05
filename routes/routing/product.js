@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const config = require('../db.js');
+const config = require('../../db.js');
 const connection = config.connection;
 
 

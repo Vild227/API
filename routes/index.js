@@ -1,10 +1,12 @@
 const express = require('express');
+require('dotenv').config();
 const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const crypto = require('crypto');
 
 //frontend routing
 const homeRoute = require('./routing/home');
@@ -18,6 +20,7 @@ const checkUsernameRoute = require('./routing/checkUsername');
 
 // Import sequelize and User from models.js
 const { sequelize, User } = require('./routing/models');
+const {sendPasswordResetEmail} = require("../mailer");
 
 const sessionStore = new SequelizeStore({
     db: sequelize,
@@ -85,6 +88,40 @@ app.post('/register', async (req, res) => {
         res.status(500).send('Error during registration');
     }
 });
+
+app.post('/password-reset', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Generate a password reset token
+        const token = crypto.randomBytes(32).toString('hex');
+
+        // Set an expiration date for the token, e.g., 1 hour
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() + 1);
+
+        // Save the token in the database
+        await PasswordResetToken.create({
+            token,
+            userId: user.id,
+            expirationDate,
+        });
+
+        // Send a password reset email
+        await sendPasswordResetEmail(user.email, token);
+
+        res.status(200).send('Password reset email sent');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error during password reset');
+    }
+});
+
 
 // Example of a protected route
 app.get('/protected', passport.authenticate('local'), (req, res) => {
