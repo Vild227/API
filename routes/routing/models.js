@@ -15,25 +15,19 @@ const User = sequelize.define('User', {
     password: Sequelize.STRING,
 });
 
-module.exports = { sequelize, User };
-
 const PasswordResetToken = sequelize.define('password_reset_token', {
     token: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
     },
     userId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
     },
     expirationDate: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
     },
 });
 
-
-User.hasOne(PasswordResetToken, { foreignKey: 'userId' });
-PasswordResetToken.belongsTo(User, { foreignKey: 'userId' });
-
-module.exports = { PasswordResetToken };
+module.exports = { sequelize, User, PasswordResetToken };
