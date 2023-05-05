@@ -2,11 +2,12 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const transport = nodemailer.createTransport({
-    host: 'smtp.mailtrap.io',
+    service: 'gmail',
+    host: 'smtp.gmail.com',
     port: 587,
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        user: 'christiaan.backendschool@gmail.com',
+        pass: 'e6b971a8e10954',
     },
 });
 
