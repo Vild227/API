@@ -15,6 +15,7 @@ const loginRoute = require('./routing/login');
 const checkoutFormRoute = require('./routing/checkoutForm');
 const paymentRoute = require('./routing/payment');
 const registrationRoute = require('./routing/registration');
+
 //
 
 const checkUsernameRoute = require('./routing/checkUsername');
@@ -61,7 +62,7 @@ app.use('/registration', registrationRoute);
 app.use('/checkUsername', checkUsernameRoute);
 
 // Registration route
-app.post('/register', async (req, res) => {
+    app.post('/register', async (req, res) => {
     try {
         const { username, password, email } = req.body; // Add email to the destructuring
 
@@ -138,6 +139,36 @@ app.post('/password-reset', async (req, res) => {
 app.get('/protected', passport.authenticate('local'), (req, res) => {
     res.send('This is a protected route');
 });
+
+app.get('/product', (req, res) => {
+    connection.query('SELECT * FROM Product', (error, results, fields) => {
+        if (error) {
+            res.status(500).send('Error retrieving products from database');
+        } else {
+            res.status(200).send(results);
+        }
+    });
+});
+
+const mysql = require('mysql');
+
+const connection = mysql.createConnection({
+    host: '130.225.170.71',
+    user: 'root1',
+    password: 'root1Root1&',
+    database: 'WebPage',
+    port: 3306
+});
+
+connection.connect(function(err) {
+    if (err) throw err;
+    connection.query("SELECT * FROM Product", function (err, result, fields) {
+        if (err) throw err;
+        //console.log(result);
+    });
+});
+
+
 
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
